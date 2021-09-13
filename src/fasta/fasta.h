@@ -34,7 +34,7 @@ FASTA_API enum fasta_rc fasta_read(struct fasta *fa);
 
 FASTA_API void fasta_clearerr(struct fasta *fa);
 
-FASTA_API void fasta_write(struct fasta *fa, struct fasta_target tgt,
-                           unsigned ncols);
+FASTA_API enum fasta_rc fasta_write(struct fasta *fa, struct fasta_target tgt,
+                                    unsigned ncols);
 
 #endif

@@ -2,6 +2,7 @@
 #include "error.h"
 #include "fsm.h"
 #include "tok.h"
+#include <errno.h>
 #include <string.h>
 
 static void buffer_init(struct fasta *fa)
@@ -54,18 +55,24 @@ enum fasta_rc fasta_read(struct fasta *fa)
 
 void fasta_clearerr(struct fasta *fa) { fa->error[0] = '\0'; }
 
-void fasta_write(struct fasta *fa, struct fasta_target tgt, unsigned ncols)
+enum fasta_rc fasta_write(struct fasta *fa, struct fasta_target tgt,
+                          unsigned ncols)
 {
-    fprintf(fa->fd, ">%s", tgt.id);
-    if (tgt.desc[0]) fprintf(fa->fd, " %s", tgt.desc);
+    if (fprintf(fa->fd, ">%s", tgt.id) < 0)
+        return error_io("failed to write", errno);
+
+    if (tgt.desc[0] && fprintf(fa->fd, " %s", tgt.desc) < 0)
+        return error_io("failed to write", errno);
 
     for (char const *c = tgt.seq; *c; ++c)
     {
         if (((c - tgt.seq) % ncols) == 0)
         {
-            fputc('\n', fa->fd);
+            if (fputc('\n', fa->fd) == EOF)
+                return error_io("failed to write", errno);
         }
-        fputc(*c, fa->fd);
+        if (fputc(*c, fa->fd) == EOF) return error_io("failed to write", errno);
     }
-    fputc('\n', fa->fd);
+    if (fputc('\n', fa->fd) == EOF) return error_io("failed to write", errno);
+    return FASTA_SUCCESS;
 }
