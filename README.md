@@ -1,1 +1,3 @@
-# fasta-reader
+# FASTA library
+
+Implemented in C.
