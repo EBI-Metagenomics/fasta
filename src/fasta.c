@@ -58,21 +58,19 @@ void fasta_clearerr(struct fasta *fa) { fa->error[0] = '\0'; }
 enum fasta_rc fasta_write(struct fasta *fa, struct fasta_target tgt,
                           unsigned ncols)
 {
-    if (fprintf(fa->fd, ">%s", tgt.id) < 0)
-        return error_io("failed to write", errno);
+    if (fprintf(fa->fd, ">%s", tgt.id) < 0) return error_io(fa->error, errno);
 
     if (tgt.desc[0] && fprintf(fa->fd, " %s", tgt.desc) < 0)
-        return error_io("failed to write", errno);
+        return error_io(fa->error, errno);
 
     for (char const *c = tgt.seq; *c; ++c)
     {
         if (((c - tgt.seq) % ncols) == 0)
         {
-            if (fputc('\n', fa->fd) == EOF)
-                return error_io("failed to write", errno);
+            if (fputc('\n', fa->fd) == EOF) return error_io(fa->error, errno);
         }
-        if (fputc(*c, fa->fd) == EOF) return error_io("failed to write", errno);
+        if (fputc(*c, fa->fd) == EOF) return error_io(fa->error, errno);
     }
-    if (fputc('\n', fa->fd) == EOF) return error_io("failed to write", errno);
+    if (fputc('\n', fa->fd) == EOF) return error_io(fa->error, errno);
     return FASTA_SUCCESS;
 }
