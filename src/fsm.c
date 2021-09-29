@@ -1,5 +1,4 @@
 #include "fsm.h"
-#include "aux.h"
 #include "error.h"
 #include "fasta/aux.h"
 #include "fasta/target.h"
