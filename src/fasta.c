@@ -35,7 +35,6 @@ enum fasta_rc fasta_read(struct fasta *fa)
     buffer_init(fa);
     if (fa->state == STATE_PAUSE) strcpy(fa->buffer.id, fa->aux.id);
 
-    enum state initial_state = fa->state;
     do
     {
         enum fasta_rc rc = FASTA_SUCCESS;
@@ -47,8 +46,7 @@ enum fasta_rc fasta_read(struct fasta *fa)
 
     } while (fa->state != STATE_PAUSE && fa->state != STATE_END);
 
-    if (fa->state == STATE_END && initial_state == STATE_BEGIN)
-        return FASTA_ENDFILE;
+    if (fa->state == STATE_END) return FASTA_ENDFILE;
 
     return FASTA_SUCCESS;
 }

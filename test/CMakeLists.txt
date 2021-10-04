@@ -1,4 +1,3 @@
-add_custom_target(all_tests)
 find_package(hope REQUIRED)
 
 file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -9,7 +8,6 @@ file(MAKE_DIRECTORY ${TMPDIR})
 
 function(fasta_add_test name srcs)
   add_executable(${name} ${srcs})
-  add_dependencies(all_tests ${name})
   target_link_libraries(${name} PRIVATE FASTA::fasta)
   target_link_libraries(${name} PRIVATE HOPE::hope)
   target_compile_options(${name} PRIVATE ${WARNING_FLAGS})

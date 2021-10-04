@@ -3,6 +3,7 @@
 
 void test_read_empty(void);
 void test_read_mix(void);
+void test_read_example(void);
 void test_read_damaged1(void);
 void test_read_damaged2(void);
 void test_read_damaged3(void);
@@ -11,6 +12,7 @@ int main(void)
 {
     test_read_empty();
     test_read_mix();
+    test_read_example();
     test_read_damaged1();
     test_read_damaged2();
     test_read_damaged3();
@@ -79,6 +81,29 @@ void test_read_mix(void)
         i++;
     }
     EQ(i, 4);
+    EQ(rc, FASTA_ENDFILE);
+
+    fclose(fd);
+}
+
+void test_read_example(void)
+{
+    FILE *fd = fopen(ASSETS "/example.faa", "r");
+    NOTNULL(fd);
+
+    struct fasta fa;
+    fasta_init(&fa, fd, FASTA_READ);
+
+    unsigned i = 0;
+    enum fasta_rc rc = FASTA_SUCCESS;
+    while (!(rc = fasta_read(&fa)))
+    {
+        EQ(fa.target.id, "Homoserine_dh-consensus");
+        EQ(fa.target.desc, "");
+        EQ(fa.target.seq, "CCTATCATTCTTTCGACGT");
+        i++;
+    }
+    EQ(i, 1);
     EQ(rc, FASTA_ENDFILE);
 
     fclose(fd);
