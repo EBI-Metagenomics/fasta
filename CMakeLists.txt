@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(
   fasta
-  VERSION 0.0.5
+  VERSION 0.0.6
   LANGUAGES C)
 
 # Generate compile_commands.json file
@@ -35,6 +35,7 @@ target_compile_options(fasta PRIVATE "-fverbose-asm")
 target_link_libraries(fasta INTERFACE $<$<BOOL:${UNIX}>:m>)
 
 cbp_install(fasta MERGED)
+install(FILES ${EXPORT_FILE} DESTINATION include/fasta)
 
 enable_testing()
 add_subdirectory(test)
