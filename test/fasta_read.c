@@ -7,6 +7,7 @@ void test_read_example(void);
 void test_read_damaged1(void);
 void test_read_damaged2(void);
 void test_read_damaged3(void);
+void test_read_no_newline_end(void);
 
 int main(void)
 {
@@ -16,6 +17,7 @@ int main(void)
     test_read_damaged1();
     test_read_damaged2();
     test_read_damaged3();
+    test_read_no_newline_end();
     return hope_status();
 }
 
@@ -172,6 +174,29 @@ void test_read_damaged3(void)
     EQ(i, 0);
     EQ(rc, FASTA_PARSEERROR);
     EQ(fa.error, "Parse error: unexpected token: line 4");
+    fasta_clearerr(&fa);
+    EQ(fa.error, "");
+
+    fclose(fd);
+}
+
+void test_read_no_newline_end(void)
+{
+    FILE *fd = fopen( ASSETS "/no_newline_end.fa", "r");
+    NOTNULL(fd);
+
+    struct fasta fa;
+    fasta_init(&fa, fd, FASTA_READ);
+
+    unsigned i = 0;
+    enum fasta_rc rc = FASTA_SUCCESS;
+    while (!(rc = fasta_read(&fa)))
+    {
+        i++;
+    }
+    EQ(i, 1);
+    EQ(rc, FASTA_ENDFILE);
+    EQ(fa.error, "");
     fasta_clearerr(&fa);
     EQ(fa.error, "");
 

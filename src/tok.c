@@ -7,10 +7,10 @@
 #define DELIM " \t\r"
 
 static void add_space_before_newline(char line[FASTA_TOK_LINE_MAX]);
-static enum fasta_rc next_line(FILE *restrict fd, char error[FASTA_ERROR_SIZE],
+static enum fasta_rc next_line(FILE *restrict fp, char error[FASTA_ERROR_SIZE],
                                char line[FASTA_TOK_LINE_MAX]);
 
-void tok_init(struct fasta_tok *tok, char *error)
+void fasta_tok_init(struct fasta_tok *tok, char *error)
 {
     tok->id = TOK_NL;
     tok->value = tok->line.data;
@@ -21,13 +21,13 @@ void tok_init(struct fasta_tok *tok, char *error)
     tok->error = error;
 }
 
-enum fasta_rc tok_next(struct fasta_tok *tok, FILE *restrict fd)
+enum fasta_rc fasta_tok_next(struct fasta_tok *tok, FILE *restrict fp)
 {
     enum fasta_rc rc = FASTA_SUCCESS;
 
     if (tok->line.consumed)
     {
-        if ((rc = next_line(fd, tok->error, tok->line.data)))
+        if ((rc = next_line(fp, tok->error, tok->line.data)))
         {
             if (rc == FASTA_ENDFILE)
             {
@@ -58,14 +58,14 @@ enum fasta_rc tok_next(struct fasta_tok *tok, FILE *restrict fd)
     return FASTA_SUCCESS;
 }
 
-static enum fasta_rc next_line(FILE *restrict fd, char error[FASTA_ERROR_SIZE],
+static enum fasta_rc next_line(FILE *restrict fp, char error[FASTA_ERROR_SIZE],
                                char line[FASTA_TOK_LINE_MAX])
 {
-    if (!fgets(line, FASTA_TOK_LINE_MAX - 1, fd))
+    if (!fgets(line, FASTA_TOK_LINE_MAX - 2, fp))
     {
-        if (feof(fd)) return FASTA_ENDFILE;
+        if (feof(fp)) return FASTA_ENDFILE;
 
-        return error_io(error, ferror(fd));
+        return error_io(error, ferror(fp));
     }
 
     add_space_before_newline(line);
@@ -85,8 +85,9 @@ static void add_space_before_newline(char line[FASTA_TOK_LINE_MAX])
         }
         else
         {
-            line[n - 1] = '\n';
-            line[n] = '\0';
+            line[n] = ' ';
+            line[n + 1] = '\n';
+            line[n + 2] = '\0';
         }
     }
 }

@@ -22,7 +22,7 @@ void fasta_init(struct fasta *fa, FILE *restrict fd, enum fasta_mode mode)
     buffer_init(fa);
     fsm_init(&fa->state);
     fa->error[0] = '\0';
-    tok_init(&fa->tok, fa->error);
+    fasta_tok_init(&fa->tok, fa->error);
 }
 
 enum fasta_rc fasta_read(struct fasta *fa)
@@ -38,7 +38,7 @@ enum fasta_rc fasta_read(struct fasta *fa)
     do
     {
         enum fasta_rc rc = FASTA_SUCCESS;
-        if ((rc = tok_next(&fa->tok, fa->fd))) return rc;
+        if ((rc = fasta_tok_next(&fa->tok, fa->fd))) return rc;
 
         if ((fa->state = fsm_next(fa->state, &fa->tok, &fa->aux,
                                   &fa->buffer)) == STATE_ERROR)

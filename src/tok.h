@@ -14,7 +14,7 @@ enum tok_id
     TOK_EOF,
 };
 
-void tok_init(struct fasta_tok *tok, char *error);
-enum fasta_rc tok_next(struct fasta_tok *tok, FILE *restrict fd);
+void fasta_tok_init(struct fasta_tok *tok, char *error);
+enum fasta_rc fasta_tok_next(struct fasta_tok *tok, FILE *restrict fd);
 
 #endif
