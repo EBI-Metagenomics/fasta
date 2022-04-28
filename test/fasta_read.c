@@ -1,5 +1,5 @@
 #include "fasta/fasta.h"
-#include "hope/hope.h"
+#include "hope.h"
 
 void test_read_empty(void);
 void test_read_mix(void);
@@ -182,7 +182,7 @@ void test_read_damaged3(void)
 
 void test_read_no_newline_end(void)
 {
-    FILE *fd = fopen( ASSETS "/no_newline_end.fa", "r");
+    FILE *fd = fopen(ASSETS "/no_newline_end.fa", "r");
     NOTNULL(fd);
 
     struct fasta fa;

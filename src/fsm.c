@@ -25,7 +25,11 @@ struct trans
     enum fasta_rc (*action)(struct args *a);
 };
 
-static enum fasta_rc nop(struct args *a) { return FASTA_SUCCESS; }
+static enum fasta_rc nop(struct args *a)
+{
+    (void)a;
+    return FASTA_SUCCESS;
+}
 
 static enum fasta_rc unexpect_eof(struct args *a)
 {

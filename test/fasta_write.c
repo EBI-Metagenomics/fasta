@@ -1,5 +1,5 @@
 #include "fasta/fasta.h"
-#include "hope/hope.h"
+#include "hope.h"
 
 static char *mix_id[] = {"LCBO", "MCHU", "gi|5524211|gb|AAD44166.1|",
                          "gi|5524211|gb|AAD44166.1|"};
